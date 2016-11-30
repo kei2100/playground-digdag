@@ -1,0 +1,35 @@
+# 特定キーワードでgoogle検索し、TOP3のページから、キーワードの出現回数を取得する。
+# Digdagの機能確認でやってるので、この処理内容に価値はない。
+
+timezone: Asia/Tokyo
+
+# 検索キーワードの取得
++accept_queries:
+  require: accept_queries.rb
+  rb>: accept_queries
+
++process_queries:
+  # 取得した検索キーワード分、taskを実行。（parallel）
+  for_each>:
+    query: ${queries}
+  _parallel: true
+  _do:
+    # 検索キーワードでgoogle検索し、TOP3のページHTMLを保存
+    +get_pages:
+      require: get_pages.rb
+      rb>: get_pages
+
+    +process_pages:
+      for_each>:
+        page_path: ${page_paths}
+      _parallel: true
+      _do:
+        # ページHTMLのテキストから検索キーワードの出現回数を雑に数え、結果ファイルに保存
+        +count_query_word_in_page:
+          require: count_query_word_in_page.rb
+          rb>: count_query_word_in_page
+
+# 結果ファイルの内容を出力
++output_results:
+  require: output_results.rb
+  rb>: output_results
