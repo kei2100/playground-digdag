@@ -1,0 +1,16 @@
+timezone: Asia/Tokyo
+
++task1:
+  +childs:
+    _parallel: true
+    # parallelなtaskはどれかerrorになっても実行される模様
+    +child1:
+      sh>: echo 'child1'
+    +child2:
+      sh>: echo 'child2' && exit 1
+    +child3:
+      sh>: echo 'child3'
+
+# ここは +parent がerrorで終わったと判定されて実行されない
++task2:
+  sh>: echo 'taks2'

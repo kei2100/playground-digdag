@@ -1,0 +1,10 @@
+timezone: Asia/Tokyo
+
++task-1:
+  sh>: echo 'task-1'
++task-2:
+  sh>: echo 'task-2' && exit 1
++task-3:
+  sh>: echo 'task-3'
+
+# task-3は実行されない。
